@@ -1,6 +1,6 @@
 package org.palomafp.examen;
 
-public class GeneradorExamenes {
+public class Examenes {
 
    
     public static void main(String[] args) throws Exception {
