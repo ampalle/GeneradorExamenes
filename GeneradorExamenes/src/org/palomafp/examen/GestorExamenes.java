@@ -1,10 +1,13 @@
 package org.palomafp.examen;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,8 +34,13 @@ public class GestorExamenes {
 		    File archivo = new File(rutaCSV);
 
 		    // Leer las preguntas del archivo CSV
-		    try (BufferedReader br = new BufferedReader(new FileReader(rutaCSV))) {
-		        String linea;
+		    InputStream is = getClass().getResourceAsStream(rutaCSV);
+		    BufferedReader br;
+		    
+		    try {
+		    	br= new BufferedReader(new InputStreamReader(is));
+			    
+		    	String linea;
 		        while ((linea = br.readLine()) != null) {
 		            String[] partes = linea.split(";", 2);
 		            if (partes.length < 2) continue;
@@ -91,7 +99,17 @@ public class GestorExamenes {
 	        document.open();
 	        
             // Cargar la imagen desde disco
-            Image imagen = Image.getInstance("img/IESPaloma.png");
+	        InputStream is = getClass().getResourceAsStream("/img/IESPaloma.png");
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+	        byte[] buffer = new byte[1024];
+	        int bytesRead;
+	        while ((bytesRead = is.read(buffer)) != -1) {
+	            baos.write(buffer, 0, bytesRead);
+	        }
+	        is.close();
+
+	        Image imagen = Image.getInstance(baos.toByteArray());
 
             // Opcional: redimensionar la imagen
             imagen.scaleToFit(400, 194); // ancho x alto máximos
@@ -138,7 +156,11 @@ public class GestorExamenes {
 	    private  Map<String, List<String>> cargarDesdeCSV(String rutaArchivo) throws IOException {
 	        Map<String, List<String>> alumnosRA = new LinkedHashMap<>();
 
-	        try (BufferedReader reader = new BufferedReader(new FileReader(rutaArchivo))) {
+	        
+	        InputStream is = getClass().getResourceAsStream(rutaArchivo);
+	        BufferedReader reader;
+	        try {
+	        	reader = new BufferedReader(new InputStreamReader(is));
 	            String headerLine = reader.readLine();
 	            if (headerLine == null) return alumnosRA;
 
@@ -158,6 +180,8 @@ public class GestorExamenes {
 
 	                alumnosRA.put(alumno, ras);
 	            }
+	        }catch(Exception e) {
+	        	e.printStackTrace();
 	        }
 
 	        return alumnosRA;
