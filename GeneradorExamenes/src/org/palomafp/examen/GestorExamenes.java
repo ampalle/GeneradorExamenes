@@ -25,42 +25,29 @@ public class GestorExamenes {
 	 private  Map<String, List<String>> alumnos = new LinkedHashMap<>();
 
 	
-	 public  void cargarBancoPreguntas() {
-	        bancoPreguntas.put("RA1", List.of(
-	            "RA1. Crea un programa que declare diferentes tipos de variables (int, double, boolean, String) y las muestre por pantalla usando System.out.println.",
-	            "RA1. Escribe un programa que imprima 'Hola Mundo'.",
-	            "RA1. ¿Qué tipos de datos primitivos hay en Java?"
-	        ));
+	 public void cargarBancoPreguntasCSV(String rutaCSV) {
+		    bancoPreguntas.clear(); // Limpiar contenido anterior
 
-	        bancoPreguntas.put("RA2", List.of(
-	            "RA2. Diseña una clase Persona con atributos nombre, edad y dni. Añade un método mostrarDatos() que imprima los datos de la persona.",
-	            "RA2. Implementa una clase Coche con atributos y métodos.",
-	            "RA2. ¿Qué es la encapsulación en POO?"
-	        ));
+		    File archivo = new File(rutaCSV);
 
-	        bancoPreguntas.put("RA3", List.of(
-	            "RA3. Escribe un ejemplo de estructura if-else.",
-	            "RA3. Escribe un programa que pida un número por teclado y diga si es par o impar. Luego, que muestre los primeros N números pares usando un bucle for.",
-	            "RA3. Haz un programa con while que sume números hasta 100."
-	        ));
-	        
-	        bancoPreguntas.put("RA4", List.of(
-	                "RA4. Implementa una clase Coche con atributos como marca, modelo, velocidadMaxima, y métodos como acelerar() y frenar(). Crea objetos de esta clase, pruébalos desde un main y organiza el código en dos archivos distintos."
-	            ));
-	        
-	        bancoPreguntas.put("RA5", List.of(
-	                "RA5. Crea un programa que lea una línea de texto desde teclado y la escriba en un fichero.",
-	                "RA5. Crea un programa que lea de un fichero binario y cree un fichero de objetos."
-	            ));
-	        
-	        bancoPreguntas.put("RA6", List.of(
-	                "RA6. Implementa un programa que almacene nombres de estudiantes en una lista y luego los muestre ordenados alfabéticamente. Añade funcionalidad para buscar un nombre introducido por el usuario."
-	            ));
-	        
-	        bancoPreguntas.put("RA7", List.of(
-	                "RA7. Crea una clase abstracta Animal con método abstracto hacerSonido(). Implementa las clases Perro y Gato que extiendan Animal. Prueba el polimorfismo creando una lista de Animal y recorriéndola para hacer que cada uno emita su sonido. Añade control de excepciones en métodos donde pueda haber errores de entrada."
-	            ));
-	    }
+		    // Leer las preguntas del archivo CSV
+		    try (BufferedReader br = new BufferedReader(new FileReader(rutaCSV))) {
+		        String linea;
+		        while ((linea = br.readLine()) != null) {
+		            String[] partes = linea.split(";", 2);
+		            if (partes.length < 2) continue;
+
+		            String ra = partes[0].trim();
+		            String pregunta = partes[1].trim();
+
+		            if (!ra.isEmpty() && !pregunta.isEmpty()) {
+		                bancoPreguntas.computeIfAbsent(ra, k -> new ArrayList<>()).add(pregunta);
+		            }
+		        }
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+		}
 
 	 public void cargarAlumnos(String file) {
 			try {
