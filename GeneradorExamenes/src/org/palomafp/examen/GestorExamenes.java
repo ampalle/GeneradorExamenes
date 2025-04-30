@@ -15,6 +15,7 @@ import java.util.Map;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
@@ -101,6 +102,20 @@ public class GestorExamenes {
 	        Document document = new Document();
 	        PdfWriter.getInstance(document, new FileOutputStream(fileName));
 	        document.open();
+	        
+            // Cargar la imagen desde disco
+            Image imagen = Image.getInstance("img/IESPaloma.png");
+
+            // Opcional: redimensionar la imagen
+            imagen.scaleToFit(400, 194); // ancho x alto máximos
+
+            // Opcional: posicionar centrado
+            imagen.setAlignment(Image.ALIGN_CENTER);
+
+            // Añadir al documento
+            document.add(imagen);
+	        
+	        
 
 	        Font fontTitle = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
 	        Font fontText = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
