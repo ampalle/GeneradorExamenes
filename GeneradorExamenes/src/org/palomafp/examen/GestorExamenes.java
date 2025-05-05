@@ -42,6 +42,7 @@ public class GestorExamenes {
 			    
 		    	String linea;
 		        while ((linea = br.readLine()) != null) {
+		        	System.out.println(linea);
 		            String[] partes = linea.split(";", 2);
 		            if (partes.length < 2) continue;
 
