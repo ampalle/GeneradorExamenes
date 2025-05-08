@@ -1,14 +1,7 @@
-RA1;1. Crea un programa que declare diferentes tipos de variables (int, double, boolean, String) y las muestre por pantalla usando System.out.println.
-RA1;1. Escribe un programa que imprima 'Hola Mundo'.
-RA1;1. ¿Qué tipos de datos primitivos hay en Java?
-RA2;Diseña una clase Persona con atributos nombre, edad y dni. Añade un método mostrarDatos() que imprima los datos de la persona.
-RA2;Implementa una clase Coche con atributos y métodos.
-RA2;¿Qué es la encapsulación en POO?
-RA3;Escribe un ejemplo de estructura if-else.
-RA3;Escribe un programa que pida un número por teclado y diga si es par o impar. Luego, que muestre los primeros N números pares usando un bucle for.
-RA3;Haz un programa con while que sume números hasta 100.
-RA4;Implementa una clase Coche con atributos como marca, modelo, velocidadMaxima, y métodos como acelerar() y frenar(). Crea objetos de esta clase, pruébalos desde un main y organiza el código en dos archivos distintos.
-RA5;Crea un programa que lea una línea de texto desde teclado y la escriba en un fichero.
-RA5;Crea un programa que lea de un fichero binario y cree un fichero de objetos.
-RA6;Implementa un programa que almacene nombres de estudiantes en una lista y luego los muestre ordenados alfabéticamente. Añade funcionalidad para buscar un nombre introducido por el usuario.
-RA7;Crea una clase abstracta Animal con método abstracto hacerSonido(). Implementa las clases Perro y Gato que extiendan Animal. Prueba el polimorfismo creando una lista de Animal y recorriéndola para hacer que cada uno emita su sonido. Añade control de excepciones en métodos donde pueda haber errores de entrada.
+RA1;RA1. Crea un programa que declare diferentes tipos de variables (int, double, boolean, String) y las muestre por pantalla usando System.out.println.
+RA2;RA2. Diseña una clase Persona con atributos nombre, edad y dni. Añade un método mostrarDatos() que imprima los datos de la persona.
+RA3;RA3. Escribe un programa que pida un número por teclado y diga si es par o impar. Luego, que muestre los primeros N números pares usando un bucle for.
+RA4;RA4. Implementa una clase Coche con atributos como marca, modelo, velocidadMaxima, y métodos como acelerar() y frenar(). Crea objetos de esta clase, pruébalos desde un main y organiza el código en dos archivos distintos.
+RA5;RA5. Crea un programa que lea de un fichero binario y cree un fichero de objetos.
+RA6;RA6. Implementa un programa que almacene nombres de estudiantes en una lista y luego los muestre ordenados alfabéticamente. Añade funcionalidad para buscar un nombre introducido por el usuario.
+RA7;RA1,RA2,RA4,RA7. Crea una clase abstracta Animal con método abstracto hacerSonido(). Implementa las clases Perro y Gato que extiendan Animal. Prueba el polimorfismo creando una lista de Animal y recorriéndola para hacer que cada uno emita su sonido. Añade control de excepciones en métodos donde pueda haber errores de entrada.
