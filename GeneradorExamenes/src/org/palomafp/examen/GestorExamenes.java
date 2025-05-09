@@ -77,54 +77,49 @@ public class GestorExamenes {
 
 	private void guardarExamenPdf(String nombre, List<String> ras) throws Exception {
 		String fileName = generarCabecera(nombre);
-		
-		String fileNameSalida=fileName.replace(".pdf","_2.pdf");
-		
-		//Añadimos las preguntas
+		String tmpFile=fileName;
+		String fileNameSalida = fileName.replace("tmp_", "");
+
+		// Añadimos las preguntas
 		PdfReader reader = new PdfReader(fileName);
 		Document documento = new Document(reader.getPageSizeWithRotation(1));
 		PdfCopy copy = new PdfCopy(documento, new FileOutputStream(fileNameSalida));
-        documento.open();
-        PdfImportedPage page = copy.getImportedPage(reader, 1);
-        copy.addPage(page);
+		documento.open();
+		PdfImportedPage page = copy.getImportedPage(reader, 1);
+		copy.addPage(page);
 
-        //añade los RAs
+		// añade los RAs
 		for (String ra : ras) {
 
 			// Crea el lector del PDF existente
 			PdfReader readerRA = new PdfReader(ra + ".pdf");
 
-	
 			// Importar cada página del PDF original
 			for (int i = 1; i <= readerRA.getNumberOfPages(); i++) {
 				PdfImportedPage page2 = copy.getImportedPage(readerRA, i);
-                copy.addPage(page2);
+				copy.addPage(page2);
 			}
 
 			readerRA.close();
 		}
-
+		reader.close();
 		documento.close();
+		// Borro el tmp con la cabecera
+		File archivo = new File(tmpFile);
+		System.out.println("borrado fichero "+tmpFile+" "+archivo.delete());
+		
+
 	}
 
-	/**
-	 * @param nombre
-	 * @return
-	 * @throws DocumentException
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws BadElementException
-	 * @throws MalformedURLException
-	 */
 	private String generarCabecera(String nombre)
 			throws DocumentException, FileNotFoundException, IOException, BadElementException, MalformedURLException {
-		String fileName = "examenes/" + nombre.replace(" ", "_") + ".pdf";
+		String fileName = "examenes/tmp_" + nombre.replace(" ", "_") + ".pdf";
 		File dir = new File("examenes");
 		if (!dir.exists())
 			dir.mkdir();
 
 		Document document = new Document();
-		PdfWriter writer =PdfWriter.getInstance(document, new FileOutputStream(fileName));
+		PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
 		document.open();
 
 		// Cargar la imagen desde disco
@@ -153,7 +148,7 @@ public class GestorExamenes {
 		Font fontText = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
 		Font fontBold = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
 
-		Paragraph title = new Paragraph("Examen de Programación 1AMM 2", fontTitle);
+		Paragraph title = new Paragraph("Examen de Programación 1AMM", fontTitle);
 		title.setSpacingAfter(20f); // espacio en puntos
 
 		document.addAuthor("Arturo Martinez");
