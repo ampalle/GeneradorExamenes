@@ -5,14 +5,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,35 +21,17 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.*;
+import com.itextpdf.text.pdf.PdfCopy;
+import com.itextpdf.text.pdf.PdfImportedPage;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfWriter;
 
 public class GestorExamenes {
 
-	private Map<String, List<String>> bancoPreguntas = new HashMap<>();
+	private static final String RUTA_SALIDA="examenes/";
 	private Map<String, List<String>> alumnos = new LinkedHashMap<>();
 
-	/*
-	 * public void cargarBancoPreguntasCSV(String rutaCSV) { bancoPreguntas.clear();
-	 * // Limpiar contenido anterior
-	 * 
-	 * File archivo = new File(rutaCSV);
-	 * 
-	 * // Leer las preguntas del archivo CSV InputStream is =
-	 * getClass().getResourceAsStream(rutaCSV); BufferedReader br;
-	 * 
-	 * try { br= new BufferedReader(new InputStreamReader(is));
-	 * 
-	 * String linea; while ((linea = br.readLine()) != null) {
-	 * System.out.println(linea); String[] partes = linea.split(";", 2); if
-	 * (partes.length < 2) continue;
-	 * 
-	 * String ra = partes[0].trim(); String pregunta = partes[1].trim();
-	 * 
-	 * if (!ra.isEmpty() && !pregunta.isEmpty()) {
-	 * bancoPreguntas.computeIfAbsent(ra, k -> new ArrayList<>()).add(pregunta); } }
-	 * } catch (IOException e) { e.printStackTrace(); } }
-	 */
-
+	
 	public void cargarAlumnos(String file) {
 		try {
 			alumnos = cargarDesdeCSV(file);
@@ -77,7 +56,6 @@ public class GestorExamenes {
 
 	private void guardarExamenPdf(String nombre, List<String> ras) throws Exception {
 		String fileName = generarCabecera(nombre);
-		String tmpFile=fileName;
 		String fileNameSalida = fileName.replace("tmp_", "");
 
 		// Añadimos las preguntas
@@ -104,16 +82,12 @@ public class GestorExamenes {
 		}
 		reader.close();
 		documento.close();
-		// Borro el tmp con la cabecera
-		File archivo = new File(tmpFile);
-		System.out.println("borrado fichero "+tmpFile+" "+archivo.delete());
-		
 
 	}
 
 	private String generarCabecera(String nombre)
 			throws DocumentException, FileNotFoundException, IOException, BadElementException, MalformedURLException {
-		String fileName = "examenes/tmp_" + nombre.replace(" ", "_") + ".pdf";
+		String fileName = RUTA_SALIDA+"tmp_" + nombre.replace(" ", "_") + ".pdf";
 		File dir = new File("examenes");
 		if (!dir.exists())
 			dir.mkdir();
@@ -164,6 +138,27 @@ public class GestorExamenes {
 		document.add(new Paragraph("", fontText));
 		document.add(new Paragraph(" ", fontText));
 
+		document.add(new Paragraph("Instrucciones", fontBold));
+		document.add(new Paragraph("", fontText));
+		document.add(new Paragraph(" ", fontText));
+		
+		
+		Font font = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
+		com.itextpdf.text.List lista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+        lista.setListSymbol(new com.itextpdf.text.Chunk("- ", font));
+
+         lista.add(new com.itextpdf.text.ListItem("Solo se debe usar el entorno de desarrollo (Eclipse o equivalente). El uso de otros dispositivos o aplicaciones implica la expulsión del examen.", font));
+         lista.add(new com.itextpdf.text.ListItem("Se deberán entregar en un zip con todos los archivos necesarios para poder corregir el examen en la tarea específica del aula virtual. El zip se llamará Nombre_Apellido.", font));
+         lista.add(new com.itextpdf.text.ListItem("El código deberá estar correctamente comentado, tabulado y formateado.", font));
+         lista.add(new com.itextpdf.text.ListItem("Se penalizará el código que no cumpla con las reglas de buenas prácticas explicadas en clase, los nombres de variables o métodos poco significativos, falta de comentarios o código mal formateado.", font));
+         lista.add(new com.itextpdf.text.ListItem("Se penalizará las clases que no cumplan el principio de encapsulamiento.", font));
+         lista.add(new com.itextpdf.text.ListItem("Cada clase debe ir en un fichero independiente.", font));
+         lista.add(new com.itextpdf.text.ListItem("No se valorará, o se hará de manera negativa, la programación de funcionalidades que no se pidan.", font));
+         lista.add(new com.itextpdf.text.ListItem("Para que un ejercicio puntúe, será necesario que compile y ejecute (aunque no esté completa la funcionalidad).", font));
+
+         document.add(lista);
+		
+		
 		document.close();
 		return fileName;
 	}
@@ -202,4 +197,20 @@ public class GestorExamenes {
 		return alumnosRA;
 	}
 
+	public void borrarTemporales() {
+		File carpeta = new File(RUTA_SALIDA);
+
+		// Asegúrate de que es un directorio válido
+		if (carpeta.exists() && carpeta.isDirectory()) {
+			File[] archivos = carpeta.listFiles((dir, name) -> name.startsWith("tmp_"));
+
+			if (archivos != null) {
+				for (File archivo : archivos) {
+					System.out.println("Borrando: " + archivo.getName() + " -> " + archivo.delete());
+				}
+			}
+		} else {
+			System.out.println("No es un directorio válido");
+		}
+	}
 }
